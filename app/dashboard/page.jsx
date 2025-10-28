@@ -73,6 +73,20 @@ export default function Dashboard() {
     setLoading(false)
   }
 
+  async function deleteRun(runId) {
+    if (!confirm('Delete this run?')) return
+
+    setLoading(true)
+    setError('')
+
+    const { error } = await supabase.from('miles').delete().eq('id', runId)
+
+    if (error) setError(error.message)
+    else await fetchMiles()
+
+    setLoading(false)
+  }
+
   return (
     <div style={{ maxWidth: 500, margin: '2rem auto' }}>
       <h1>Running Log</h1>
@@ -135,6 +149,7 @@ export default function Dashboard() {
                 >
                   Edit
                 </button>
+                <button onClick={() => deleteRun(run.id)}>🗑️</button>
               </>
             )}
           </li>
