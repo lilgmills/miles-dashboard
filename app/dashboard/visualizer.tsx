@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import CircularProgress from './CircularProgress'
 
 type Run = {
   id: string
@@ -49,30 +49,15 @@ export default function Visualizer({ runs }: Props) {
   const progressPercent = Math.min((currentWeekMiles / targetMiles) * 100, 100)
 
   return (
+    
+
     <div style={{ maxWidth: 400, margin: '2rem auto' }}>
-      <h2>Weekly Goal Progress</h2>
-      <p>
-        This week: {currentWeekMiles.toFixed(1)} mi / Target: {targetMiles.toFixed(1)} mi
-      </p>
-      <div
-        style={{
-          width: '100%',
-          height: 30,
-          background: '#eee',
-          borderRadius: 6,
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
-            width: `${progressPercent}%`,
-            height: '100%',
-            background: progressPercent >= 100 ? 'green' : 'orange',
-            transition: 'width 0.3s ease',
-          }}
-        />
-      </div>
+      <CircularProgress progress={progressPercent} size={150} color="purple" />
+
+      <p>{currentWeekMiles.toFixed(1)} mi / {targetMiles.toFixed(1)} mi</p>
       {progressPercent >= 100 && <p>Goal reached!</p>}
+
+      
     </div>
   )
 }

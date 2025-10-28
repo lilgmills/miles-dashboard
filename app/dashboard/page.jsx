@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 
-import Visualizer from './visualizer'
-import CircularProgress from './CircularProgress'
+import Visualizer from './Visualizer'
 
 export default function Dashboard() {
   const [miles, setMiles] = useState([])
@@ -90,6 +89,10 @@ export default function Dashboard() {
     setLoading(false)
   }
 
+  const sortedRuns = [...runs].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  )
+
   return (
     <div style={{ maxWidth: 500, margin: '2rem auto' }}>
       <h1>Running Log</h1>
@@ -112,10 +115,9 @@ export default function Dashboard() {
         </button>
       </div>
 
-      <CircularProgress progress={progressPercent} size={150} color="orange" />
+      
 
-      <p>{currentWeekMiles.toFixed(1)} mi / {targetMiles.toFixed(1)} mi</p>
-      {progressPercent >= 100 && <p>Goal reached!</p>}
+      <Visualizer runs = {miles}/>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
