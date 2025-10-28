@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 
 import Visualizer from './visualizer'
+import CircularProgress from './CircularProgress'
 
 export default function Dashboard() {
   const [miles, setMiles] = useState([])
@@ -111,7 +112,10 @@ export default function Dashboard() {
         </button>
       </div>
 
-      <Visualizer runs={miles} />
+      <CircularProgress progress={progressPercent} size={150} color="orange" />
+
+      <p>{currentWeekMiles.toFixed(1)} mi / {targetMiles.toFixed(1)} mi</p>
+      {progressPercent >= 100 && <p>Goal reached!</p>}
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
