@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 
+import Visualizer from './visualizer'
+
 export default function Dashboard() {
   const [miles, setMiles] = useState([])
   const [loading, setLoading] = useState(false)
@@ -108,6 +110,8 @@ export default function Dashboard() {
           {loading ? 'Saving...' : 'Log Run'}
         </button>
       </div>
+
+      <Visualizer runs={miles} />
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
