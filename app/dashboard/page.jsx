@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 
-import Visualizer from './Visualizer'
+import Visualizer from './visualizer'
 
 export default function Dashboard() {
   const [miles, setMiles] = useState([])
