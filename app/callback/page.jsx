@@ -18,5 +18,5 @@ export default function CallbackPage() {
         })
     }, [router])
 
-    return <p>Loggin you in...</p>
+    return <p>Logging you in...</p>
 }
