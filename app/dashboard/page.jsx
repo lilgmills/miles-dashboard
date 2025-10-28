@@ -125,7 +125,7 @@ export default function Dashboard() {
               </>
             ) : (
               <>
-                <span>{new Date(run.date).toLocaleDateString()}</span>
+                <span>{run.date}</span>
                 <strong>{run.miles} mi</strong>
                 <button
                   onClick={() => {
