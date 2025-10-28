@@ -89,10 +89,6 @@ export default function Dashboard() {
     setLoading(false)
   }
 
-  const sortedRuns = [...runs].sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-  )
-
   return (
     <div style={{ maxWidth: 500, margin: '2rem auto' }}>
       <h1>Running Log</h1>
