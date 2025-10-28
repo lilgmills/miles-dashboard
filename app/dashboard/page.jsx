@@ -1,5 +1,113 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabaseClient'
+
 export default function Dashboard() {
-    return <h1>You made it to the dashboard!</h1>
+  const [miles, setMiles] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [newMiles, setNewMiles] = useState('')
+
+  // Fetch miles when user loads the dashboard
+  useEffect(() => {
+    fetchMiles()
+  }, [])
+
+  async function fetchMiles() {
+    setLoading(true)
+    setError('')
+    const { data, error } = await supabase
+      .from('miles')
+      .select('*')
+      .order('date', { ascending: false })
+
+    if (error) setError(error.message)
+    else setMiles(data || [])
+    setLoading(false)
+  }
+
+  async function addMiles() {
+    if (!newMiles) {
+      setError('Enter miles first!')
+      return
+    }
+
+    setLoading(true)
+    setError('')
+
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser()
+
+    if (userError) {
+      setError(userError.message)
+      setLoading(false)
+      return
+    }
+
+    const { error: insertError } = await supabase.from('miles').insert([
+      {
+        user_id: user.id,
+        date: new Date().toISOString().split('T')[0], // today's date
+        miles: parseFloat(newMiles),
+        created_at: new Date().toISOString(),
+      },
+    ])
+
+    if (insertError) setError(insertError.message)
+    else {
+      setNewMiles('')
+      await fetchMiles()
+    }
+
+    setLoading(false)
+  }
+
+  return (
+    <div style={{ maxWidth: 500, margin: '2rem auto' }}>
+      <h1>🏃‍♂️ Your Running Log</h1>
+
+      <div style={{ marginBottom: '1rem' }}>
+        <input
+          type="number"
+          step="0.01"
+          placeholder="Miles ran today"
+          value={newMiles}
+          onChange={(e) => setNewMiles(e.target.value)}
+          style={{ padding: '0.5rem', width: '70%' }}
+        />
+        <button
+          onClick={addMiles}
+          disabled={loading}
+          style={{ padding: '0.5rem', marginLeft: '0.5rem' }}
+        >
+          {loading ? 'Saving...' : 'Log Run'}
+        </button>
+      </div>
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <h2>History</h2>
+      {loading && <p>Loading...</p>}
+      {miles.length === 0 && !loading && <p>No runs yet.</p>}
+      <ul style={{ listStyle: 'none', padding: 0 }}>
+        {miles.map((run) => (
+          <li
+            key={run.id}
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              borderBottom: '1px solid #ccc',
+              padding: '0.5rem 0',
+            }}
+          >
+            <span>{new Date(run.date).toLocaleDateString()}</span>
+            <strong>{run.miles} mi</strong>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 }
