@@ -43,7 +43,7 @@ export default function Visualizer({ runs }: Props) {
     .reduce((sum, r) => sum + r.miles, 0)
 
   // --- Step 4: compute target
-  const targetMiles = lastWeekMiles * 1.1 || 5 // fallback minimum goal
+  const targetMiles = lastWeekMiles * 1.1 || 1.6 // fallback minimum goal
 
   // --- Step 5: progress %
   const progressPercent = Math.min((currentWeekMiles / targetMiles) * 100, 100)
